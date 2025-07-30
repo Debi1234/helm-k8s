@@ -120,3 +120,66 @@ kubectl --namespace <namespace> port-forward $POD_NAME 8080:$CONTAINER_PORT
 ```
 
 Then visit `http://127.0.0.1:8080` to access your application.
+
+### 6. Upgrading Helm Releases
+
+When you need to update your application with new configurations or chart versions, use the `helm upgrade` command:
+
+```bash
+# Upgrade with new values
+helm upgrade dev-apache apache-helm -n dev-apache --set replicaCount=3
+
+# Upgrade using a values file
+helm upgrade prod-apache apache-helm -n prod-apache -f values-prod.yaml
+
+# Upgrade with specific chart version
+helm upgrade stage-apache apache-helm-0.2.0.tgz -n stage-apache
+
+# Upgrade with atomic flag (rollback on failure)
+helm upgrade dev-apache apache-helm -n dev-apache --atomic --timeout 5m
+
+# Upgrade with wait flag (wait for deployment to complete)
+helm upgrade prod-apache apache-helm -n prod-apache --wait --timeout 10m
+```
+
+### 7. Rolling Back Helm Releases
+
+If an upgrade causes issues, you can rollback to a previous version:
+
+```bash
+# List release history
+helm history dev-apache -n dev-apache
+
+# Rollback to previous revision
+helm rollback dev-apache -n dev-apache
+
+# Rollback to specific revision
+helm rollback dev-apache 2 -n dev-apache
+
+# Rollback with wait flag
+helm rollback prod-apache -n prod-apache --wait --timeout 5m
+
+# Rollback with atomic flag
+helm rollback stage-apache -n stage-apache --atomic
+```
+
+### 8. Managing Helm Releases
+
+Additional useful commands for managing your Helm releases:
+
+```bash
+# Get release status
+helm status dev-apache -n dev-apache
+
+# Get release values
+helm get values dev-apache -n dev-apache
+
+# Get release manifest
+helm get manifest dev-apache -n dev-apache
+
+# Uninstall a release
+helm uninstall dev-apache -n dev-apache
+
+# Uninstall with purge (removes all resources)
+helm uninstall prod-apache -n prod-apache --no-hooks
+```
